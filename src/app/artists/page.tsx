@@ -523,6 +523,7 @@ export default function Artists() {
           {/* Claim button */}
           {!claimed ? (
             <button
+              type="button"
               onClick={handleClaim}
               disabled={claiming}
               style={{
@@ -647,6 +648,7 @@ export default function Artists() {
             ))}
 
             <button
+              type="button"
               onClick={() => setObTracks((r) => [...r, { title: "", price: "0.001" }])}
               style={{ fontFamily: "var(--font-ibm-plex-mono), monospace", fontSize: "11px", color: "#6B665E", background: "none", border: "none", padding: 0, textTransform: "uppercase", cursor: "pointer", alignSelf: "flex-start" }}
             >
@@ -654,6 +656,7 @@ export default function Artists() {
             </button>
 
             <button
+              type="button"
               onClick={handleOnboard}
               disabled={obSubmitting}
               style={{ fontFamily: "var(--font-ibm-plex-mono), monospace", fontSize: "12px", color: "#E1DDD6", background: "#0F0F0F", textTransform: "uppercase", border: "none", borderRadius: 0, padding: "12px 24px", cursor: obSubmitting ? "not-allowed" : "pointer", opacity: obSubmitting ? 0.5 : 1, alignSelf: "flex-start", marginTop: "8px" }}

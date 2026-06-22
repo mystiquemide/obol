@@ -644,6 +644,7 @@ export default function Dashboard() {
             </div>
 
             <button
+              type="button"
               onClick={runDemo}
               disabled={running}
               style={{
@@ -755,6 +756,7 @@ export default function Dashboard() {
             {RATE_PRESETS.map((rate) => (
               <button
                 key={rate}
+                type="button"
                 onClick={() => {
                   setSelectedRate(rate)
                   fetch("/api/listener/setup", {
@@ -852,6 +854,7 @@ export default function Dashboard() {
               {CAP_PRESETS.map((cap) => (
                 <button
                   key={cap}
+                  type="button"
                   onClick={() => {
                     setDailyCap(cap)
                     fetch("/api/listener/setup", {
@@ -891,6 +894,7 @@ export default function Dashboard() {
           {/* Run agent + auto-run */}
           <div style={{ display: "flex", alignItems: "center", gap: "32px", marginTop: "40px" }}>
             <button
+              type="button"
               onClick={runAgent}
               disabled={running}
               style={{
@@ -910,6 +914,7 @@ export default function Dashboard() {
               {running ? "Running..." : done ? "Done" : "Run agent"}
             </button>
             <button
+              type="button"
               onClick={() => setAutoRun((v) => !v)}
               aria-pressed={autoRun}
               style={{

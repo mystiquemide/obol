@@ -32,15 +32,23 @@ interface PlayState {
 
 export default function Listen() {
   const [tracks, setTracks] = useState<CatalogTrack[]>([])
+  const [catalogStatus, setCatalogStatus] = useState<"loading" | "ready" | "error">("loading")
   const [active, setActive] = useState<string | null>(null)
   const [state, setState] = useState<PlayState>({ steps: [] })
   const audioRef = useRef<HTMLAudioElement>(null)
 
   function loadCatalog() {
+    setCatalogStatus("loading")
     fetch("/api/x402/catalog")
-      .then((r) => r.json())
-      .then((d) => setTracks(d.tracks ?? []))
-      .catch(() => {})
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status))
+        return r.json()
+      })
+      .then((d) => {
+        setTracks(d.tracks ?? [])
+        setCatalogStatus("ready")
+      })
+      .catch(() => setCatalogStatus("error"))
   }
   useEffect(() => {
     loadCatalog()
@@ -156,7 +164,30 @@ export default function Listen() {
       </section>
 
       <section style={{ padding: "20px 120px 160px" }}>
-        {Array.from(new Set(tracks.map((t) => t.artist))).map((artistName) => (
+        {catalogStatus === "loading" && (
+          <p style={{ fontFamily: MONO, fontSize: "13px", color: "#6B665E" }}>Loading catalog…</p>
+        )}
+        {catalogStatus === "error" && (
+          <div>
+            <p style={{ fontFamily: MONO, fontSize: "13px", color: "#6B665E", margin: 0 }}>
+              Couldn&apos;t load the catalog.
+            </p>
+            <button
+              type="button"
+              onClick={loadCatalog}
+              style={{ fontFamily: MONO, fontSize: "12px", color: "#10B981", background: "none", border: "none", padding: 0, marginTop: "10px", textTransform: "uppercase", cursor: "pointer", borderBottom: "1px solid rgba(16,185,129,0.4)" }}
+            >
+              Retry
+            </button>
+          </div>
+        )}
+        {catalogStatus === "ready" && tracks.length === 0 && (
+          <p style={{ fontFamily: MONO, fontSize: "13px", color: "#6B665E" }}>
+            No tracks yet. Artists can list their music on the For Artists page.
+          </p>
+        )}
+        {catalogStatus === "ready" &&
+          Array.from(new Set(tracks.map((t) => t.artist))).map((artistName) => (
           <div key={artistName} style={{ marginBottom: "40px" }}>
             <span style={{ fontFamily: MONO, fontSize: "11px", color: "#6B665E", textTransform: "uppercase", letterSpacing: "-0.22px" }}>
               {artistName}
@@ -169,6 +200,7 @@ export default function Listen() {
               style={{ display: "flex", alignItems: "center", gap: "32px", background: "#0F0F0F", padding: "24px 0" }}
             >
               <button
+                type="button"
                 onClick={() => play(t)}
                 disabled={!!active}
                 aria-label={`Play ${t.title}`}

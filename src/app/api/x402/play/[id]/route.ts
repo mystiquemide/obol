@@ -1,8 +1,11 @@
-// x402 play orchestrator. Drives the full handshake against the gated endpoint
-// and streams every step so the UI shows: request -> 402 -> pay on Arc -> settle
-// -> retry with proof -> unlock. This is the client side of x402.
+// x402 play orchestrator — the client side of x402. Streams every step so the UI
+// shows: 402 -> pay on Arc -> settle -> verify proof -> unlock.
+//
+// The public gate (/api/x402/track/[id]) is the real HTTP 402 endpoint external
+// clients hit. This orchestrator runs the same payment-requirements + verification
+// logic in-process (no self-fetch), so it works behind tunnels and on serverless.
 import { db, dbRetry } from "@/lib/db"
-import { getTrack, encodePayment } from "@/lib/x402"
+import { getTrack, buildRequirements, verifyPayment, encodePayment } from "@/lib/x402"
 import { transferUsdc, getTransactionHash } from "@/lib/agent/circle"
 import { txUrl } from "@/lib/explorer"
 import { rateLimit, clientIp } from "@/lib/ratelimit"
@@ -22,7 +25,6 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
   const { id } = await params
   const track = await dbRetry(() => getTrack(id))
-  const origin = new URL(req.url).origin
 
   const encoder = new TextEncoder()
   const stream = new ReadableStream({
@@ -37,25 +39,18 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
           return
         }
 
-        const gateUrl = `${origin}/api/x402/track/${track.id}`
+        const resourcePath = `/api/x402/track/${track.id}`
 
-        // 1. Request the resource with no payment -> expect 402.
+        // 1. The resource requires payment -> 402 with these requirements.
         send({ type: "step", label: `GET ${track.id}`, detail: "requesting track" })
-        const challenge = await fetch(gateUrl)
-        if (challenge.status !== 402) {
-          send({ type: "error", error: `expected 402, got ${challenge.status}` })
-          controller.close()
-          return
-        }
-        const body = await challenge.json()
-        const req0 = body.accepts?.[0]
+        const requirements = buildRequirements(track, resourcePath)
         send({
           type: "challenge",
           status: 402,
           amountUsdc: track.priceUsdc,
-          payTo: req0?.payTo,
-          network: req0?.network,
-          description: req0?.description,
+          payTo: requirements.payTo,
+          network: requirements.network,
+          description: requirements.description,
         })
 
         // Defense-in-depth: cap total x402 spend per day across all callers.
@@ -98,21 +93,38 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         }
         send({ type: "settled", txHash, explorer: txUrl(txHash) })
 
-        // 3. Retry with the X-PAYMENT proof -> expect 200.
-        send({ type: "step", label: "retry", detail: "presenting payment proof" })
+        // 3. Present the X-PAYMENT proof and verify it on-chain (same check the gate runs).
+        send({ type: "step", label: "verify", detail: "checking payment proof" })
         const xPayment = encodePayment({
           scheme: "arc-onchain",
           network: "arc-testnet",
           payload: { txHash, circleTxId },
         })
-        const unlocked = await fetch(gateUrl, { headers: { "X-PAYMENT": xPayment } })
-        if (unlocked.status !== 200) {
-          const err = await unlocked.json().catch(() => ({}))
-          send({ type: "error", error: `unlock failed (${unlocked.status}): ${err.error ?? ""}` })
+        const verify = await verifyPayment(track, xPayment)
+        if (!verify.ok) {
+          send({ type: "error", error: `unlock failed: ${verify.reason ?? "invalid payment"}` })
           controller.close()
           return
         }
-        const resource = await unlocked.json()
+
+        // Anti-replay: one on-chain payment unlocks one play.
+        try {
+          await dbRetry(() =>
+            db.x402Redemption.create({
+              data: { txHash: verify.txHash!, trackId: track.id, amountUsdc: verify.amountUsdc ?? track.priceUsdc },
+            })
+          )
+        } catch {
+          send({ type: "error", error: "payment already redeemed" })
+          controller.close()
+          return
+        }
+
+        const resource = {
+          unlocked: true,
+          track: { id: track.id, title: track.title, artist: track.artist, duration: track.duration, audioUrl: track.audioUrl },
+          paid: { amountUsdc: verify.amountUsdc, txHash: verify.txHash, explorer: txUrl(verify.txHash!) },
+        }
 
         // 4. Record the play so it shows in the artist's earnings + receipt.
         try {
