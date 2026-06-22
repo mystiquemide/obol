@@ -20,7 +20,10 @@
 }
 
 :root {
-  --font-alpina: 'GT Alpina', var(--font-alpina-fallback), Georgia, serif;
+  /* IBM Plex Mono and Cormorant load via <link> in the document head (runtime,
+     no build-time fetch). GT Alpina loads from the @font-face above when present. */
+  --font-ibm-plex-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-alpina: "GT Alpina", "Cormorant", Georgia, serif;
 }
 
 /* Waveform bar keyframes */
