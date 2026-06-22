@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    restart: unless-stopped
+# Postgres is hosted externally (Neon). Point DATABASE_URL / DIRECT_URL at your database.

@@ -19,8 +19,19 @@ const cormorant = Cormorant({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: "Obol - Your music collection pays its creators",
-  description: "Autonomous per-listen royalty agent for self-hosted music. Reads your scrobbles, pays artists in USDC nanopayments. No subscriptions.",
+  description: "Per-listen royalty payments for music. Reads your listening, pays artists in USDC on-chain. No subscriptions.",
+  openGraph: {
+    title: "Obol - Every listen pays the artist",
+    description: "Per-listen USDC payments for music, settled on-chain.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Obol - Every listen pays the artist",
+    description: "Per-listen USDC payments for music, settled on-chain.",
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

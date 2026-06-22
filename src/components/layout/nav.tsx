@@ -97,6 +97,19 @@ export function Nav() {
             >
               For artists
             </Link>
+            <Link
+              href="/docs"
+              style={{
+                fontFamily: MONO,
+                fontWeight: 400,
+                fontSize: "11px",
+                color: "#E1DDD6",
+                textTransform: "uppercase",
+                textDecoration: "none",
+              }}
+            >
+              Docs
+            </Link>
           </div>
 
           {/* CTA — hidden on mobile, hidden on dashboard */}
@@ -226,6 +239,20 @@ export function Nav() {
               }}
             >
               For artists
+            </Link>
+            <Link
+              href="/docs"
+              onClick={() => setOpen(false)}
+              style={{
+                fontFamily: MONO,
+                fontWeight: 400,
+                fontSize: "16px",
+                color: "#E1DDD6",
+                textTransform: "uppercase",
+                textDecoration: "none",
+              }}
+            >
+              Docs
             </Link>
             {!onDashboard && (
               <Link

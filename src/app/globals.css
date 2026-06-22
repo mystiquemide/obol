@@ -186,4 +186,8 @@ body {
   /* Artists FAQ: hide the image grid, let text go full width */
   .artists-faq-images { display: none !important; }
   .artists-faq-content { max-width: 100% !important; }
+
+  /* Docs: stack and drop the sidebar */
+  .docs-layout { flex-direction: column !important; padding: 96px 20px 80px !important; gap: 24px !important; }
+  .docs-sidebar { position: static !important; width: 100% !important; }
 }

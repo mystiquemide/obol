@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.env
+.env.*
+!.env.example
+npm-debug.log*
+recovery
+memory.md
+.claude
+CLAUDE.md
+AGENTS.md
+docs
+prisma/dev.db
+Dockerfile
+docker-compose.yml
+README.md

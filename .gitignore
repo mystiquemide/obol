@@ -43,6 +43,10 @@ recovery/
 # internal working docs / agent config (not for the public repo)
 memory.md
 .claude/
+CLAUDE.md
+AGENTS.md
+BOILERPLATE.md
+docs/PRD.md
 
 # typescript
 *.tsbuildinfo
