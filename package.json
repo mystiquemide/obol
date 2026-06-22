@@ -16,7 +16,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
     "@circle-fin/developer-controlled-wallets": "^10.6.0",
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^7.8.0",
     "clsx": "^2.1.1",
     "lucide-react": "^1.21.0",
     "next": "16.2.9",
