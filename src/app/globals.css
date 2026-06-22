@@ -1,26 +1,189 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* GT Alpina Light — place font files in /public/fonts/ */
+@font-face {
+  font-family: 'GT Alpina';
+  src: url('/fonts/GTAlpina-Light.woff2') format('woff2'),
+       url('/fonts/GTAlpina-Light.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
+
+@font-face {
+  font-family: 'GT Alpina';
+  src: url('/fonts/GTAlpina-LightItalic.woff2') format('woff2'),
+       url('/fonts/GTAlpina-LightItalic.woff') format('woff');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --font-alpina: 'GT Alpina', var(--font-alpina-fallback), Georgia, serif;
+}
+
+/* Waveform bar keyframes */
+@keyframes waveform-1 { from { height: 40px; } to { height: 140px; } }
+@keyframes waveform-2 { from { height: 80px; } to { height: 280px; } }
+@keyframes waveform-3 { from { height: 60px; } to { height: 200px; } }
+@keyframes waveform-4 { from { height: 120px; } to { height: 300px; } }
+@keyframes waveform-5 { from { height: 50px; } to { height: 220px; } }
+@keyframes waveform-6 { from { height: 90px; } to { height: 160px; } }
+@keyframes waveform-7 { from { height: 70px; } to { height: 240px; } }
+
+.waveform-bar { width: 4px; background: rgba(225, 221, 214, 0.06); flex-shrink: 0; }
+.waveform-1 { animation: waveform-1 2.3s ease-in-out infinite alternate; }
+.waveform-2 { animation: waveform-2 3.1s ease-in-out infinite alternate; }
+.waveform-3 { animation: waveform-3 2.7s ease-in-out infinite alternate; }
+.waveform-4 { animation: waveform-4 3.5s ease-in-out infinite alternate; }
+.waveform-5 { animation: waveform-5 2.1s ease-in-out infinite alternate; }
+.waveform-6 { animation: waveform-6 3.8s ease-in-out infinite alternate; }
+.waveform-7 { animation: waveform-7 2.5s ease-in-out infinite alternate; }
+
+/* Blinking cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.blink-cursor { animation: blink 1s step-end infinite; }
+
+/* Pulse dot — scale + opacity */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.6); }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.pulse-dot-slow {
+  animation: pulse-dot 2.5s ease-in-out infinite;
+}
+
+/* Skeleton loading pulse */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+.skeleton-pulse { animation: skeleton-pulse 1.5s ease-in-out infinite; }
+
+/* Agent log line fade-in */
+@keyframes logFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.log-line { animation: logFadeIn 0.3s ease-in; }
+
+/* Keyboard focus ring for all interactive elements (accessibility) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid #10B981;
+  outline-offset: 2px;
+}
+
+/* Dashboard connection inputs — placeholder color on cream bg */
+.dashboard-input::placeholder { color: #6B665E; }
+
+/* Artists search input — placeholder color on cream bg */
+.artists-search-input::placeholder { color: #6B665E; }
+
+/* Artists wallet input — placeholder color on dark bg */
+.artists-wallet-input::placeholder { color: #6B665E; }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-mono: var(--font-ibm-plex-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #0F0F0F;
+  color: #E1DDD6;
+  font-family: var(--font-ibm-plex-mono), monospace;
+}
+
+/* ─────────── MOBILE RESPONSIVENESS ─────────── */
+
+/* Nav: hamburger hidden on desktop, desktop links hidden on mobile */
+@media (min-width: 769px) {
+  .nav-hamburger { display: none; }
+}
+
+@media (max-width: 768px) {
+  /* Nav */
+  .nav-links        { display: none !important; }
+  .nav-desktop-cta  { display: none !important; }
+  .nav-hamburger    { display: flex !important; align-items: center; justify-content: center; }
+
+  /* Section padding — overrides inline 100px/120px/160px padding */
+  .section-pad { padding: 60px 24px !important; }
+
+  /* Hero */
+  .hero-section   { height: 100svh !important; }
+  .hero-content   { padding-left: 24px !important; padding-right: 24px !important; max-width: 100% !important; }
+  .hero-headline  { font-size: 28px !important; line-height: 34px !important; }
+  .hero-subtext   { font-size: 14px !important; }
+  .hero-ctas      { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+  .hero-label     { font-size: 10px !important; }
+
+  /* How it works */
+  .hiw-section      { padding-top: 60px !important; padding-bottom: 60px !important; }
+  .hiw-label-row    { padding-left: 24px !important; }
+  .hiw-headline     { padding-left: 24px !important; padding-right: 24px !important; font-size: 24px !important; line-height: 28px !important; }
+  .hiw-steps        { flex-direction: column !important; gap: 40px !important; padding-left: 24px !important; padding-right: 24px !important; }
+  .hiw-divider      { display: none !important; }
+  .hiw-step-title   { font-size: 16px !important; }
+
+  /* Live payment feed */
+  .feed-row         { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
+  .feed-track       { font-size: 16px !important; flex: none !important; }
+  .feed-artist      { flex: none !important; }
+  .feed-amount      { flex: none !important; }
+  .feed-stats       { flex-direction: column !important; gap: 24px !important; }
+  .feed-stat-num    { font-size: 22px !important; }
+
+  /* For Artists */
+  .fa-features { flex-direction: column !important; gap: 24px !important; }
+
+  /* Built With */
+  .bw-stack { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 24px !important; }
+  .bw-item  { flex: none !important; }
+
+  /* Final CTA */
+  .fcta-headline { font-size: 24px !important; line-height: 28px !important; }
+  .fcta-ctas     { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+
+  /* Footer */
+  .footer-wrap {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    padding: 24px !important;
+  }
+}
+
+/* ─── Inner pages: dashboard / artists / how-it-works ─── */
+@media (max-width: 768px) {
+  .mobile-page section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+  }
+  .mobile-page h1 { font-size: 30px !important; line-height: 36px !important; }
+  .mobile-page h2 { font-size: 26px !important; line-height: 30px !important; }
+  .mobile-page input { width: 100% !important; max-width: 100% !important; box-sizing: border-box; }
+  .mobile-page form { max-width: 100% !important; }
+
+  /* Stack flex rows that have wide fixed-width children */
+  .stack-mobile { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+  .stack-mobile > span { min-width: 0 !important; }
+  .stack-mobile-divider { display: none !important; }
+
+  /* Artists FAQ: hide the image grid, let text go full width */
+  .artists-faq-images { display: none !important; }
+  .artists-faq-content { max-width: 100% !important; }
 }

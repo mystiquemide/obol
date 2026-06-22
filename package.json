@@ -1,5 +1,5 @@
 {
-  "name": "boilerplate-ai-saas",
+  "name": "obol",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,14 +10,13 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
-    "@auth/prisma-adapter": "^2.11.2",
-    "@prisma/client": "^7.8.0",
+    "@circle-fin/developer-controlled-wallets": "^10.6.0",
+    "@prisma/client": "^5.22.0",
     "clsx": "^2.1.1",
     "lucide-react": "^1.21.0",
     "next": "16.2.9",
-    "next-auth": "^5.0.0-beta.31",
-    "openai": "^6.44.0",
-    "prisma": "^7.8.0",
+    "node-id3": "^0.2.9",
+    "prisma": "^5.22.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tailwind-merge": "^3.6.0"

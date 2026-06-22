@@ -3,14 +3,89 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// A listener who connects their Navidrome server
+model Listener {
+  id             String    @id @default(cuid())
+  navidromeUrl   String
+  navidromeUser  String
+  navidromePass  String
+  circleWalletId String?
+  ratePerListen  Float     @default(0.001) // USDC per scrobble
+  dailyCapUsdc   Float     @default(1.0)   // max USDC the agent may spend per day
+  createdAt      DateTime  @default(now())
+  payments       Payment[]
+}
+
+// An artist resolved from MusicBrainz
+model Artist {
+  id               String    @id @default(cuid())
+  musicBrainzId    String    @unique
+  name             String
+  circleWalletId   String?   // null = unclaimed, earns accumulate in escrow
+  totalEarned      Float     @default(0)
+  resolvedVia      String?   // how the agent resolved this artist: "MBID" | "Groq ..." | "MusicBrainz" | "local"
+  resolvedNote     String?   // the agent's one-line reasoning (LLM disambiguation)
+  createdAt        DateTime  @default(now())
+  payments         Payment[]
+  tracks           Track[]
+}
+
+// A track in the x402 pay-per-play catalog
+model Track {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  title      String
+  artistId   String
+  priceUsdc  Float    @default(0.001)
+  duration   String   @default("")
+  audioUrl   String?  // playable audio for the demo
+  createdAt  DateTime @default(now())
+  artist     Artist   @relation(fields: [artistId], references: [id])
+}
+
+// Each per-listen nanopayment
+model Payment {
+  id           String   @id @default(cuid())
+  listenerId   String
+  artistId     String
+  trackTitle   String
+  amountUsdc   Float
+  settled      Boolean  @default(false)
+  settledAt    DateTime?
+  circlePayId  String?  // Circle transaction UUID
+  txHash       String?  // on-chain tx hash (Arc), resolved from Circle — used for explorer links
+  scrobbledAt  DateTime
+  scrobbleKey  String   @unique // stable id for a play event — prevents double-paying the same scrobble
+  createdAt    DateTime @default(now())
+
+  listener     Listener @relation(fields: [listenerId], references: [id])
+  artist       Artist   @relation(fields: [artistId], references: [id])
+}
+
+// x402 payment redemptions — one on-chain payment unlocks one play (anti-replay)
+model X402Redemption {
+  id         String   @id @default(cuid())
+  txHash     String   @unique
+  trackId    String
+  amountUsdc Float
+  createdAt  DateTime @default(now())
+}
+
+// Agent run log - shows judges the agent is real
+model AgentRun {
+  id              String   @id @default(cuid())
+  scrobbleCount   Int
+  resolvedCount   Int
+  paymentCount    Int
+  totalUsdc       Float
+  status          String   // "success" | "error"
+  errorMessage    String?
+  startedAt       DateTime
+  finishedAt      DateTime
+  createdAt       DateTime @default(now())
 }

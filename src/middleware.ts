@@ -1,14 +1,6 @@
-import { auth } from "@/lib/auth"
-
-export default auth((req) => {
-  const isAuth = !!req.auth
-  const isAuthPage = req.nextUrl.pathname.startsWith("/dashboard")
-
-  if (isAuthPage && !isAuth) {
-    return Response.redirect(new URL("/api/auth/signin", req.url))
-  }
-})
+// Auth disabled for hackathon demo - dashboard is public
+export function middleware() {}
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: [],
 }

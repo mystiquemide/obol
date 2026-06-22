@@ -32,9 +32,17 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
+
+# local data dumps (may contain credentials)
+recovery/
+
+# internal working docs / agent config (not for the public repo)
+memory.md
+.claude/
 
 # typescript
 *.tsbuildinfo

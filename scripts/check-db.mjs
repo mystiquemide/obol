@@ -1,0 +1,11 @@
+import { PrismaClient } from "@prisma/client"
+const db = new PrismaClient()
+const listeners = await db.listener.findMany()
+const artists = await db.artist.count()
+const payments = await db.payment.count()
+const runs = await db.agentRun.count()
+console.log("Listeners:", JSON.stringify(listeners.map(l => ({ id: l.id, url: l.navidromeUrl, wallet: l.circleWalletId })), null, 2))
+console.log("Artists:", artists)
+console.log("Payments:", payments)
+console.log("Agent runs:", runs)
+await db.$disconnect()
