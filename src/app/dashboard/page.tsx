@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react"
 import { txUrl, shortHash } from "@/lib/explorer"
+import { useReveal } from "@/lib/use-reveal"
 
 interface Payment {
   id: string
@@ -65,127 +66,22 @@ export default function Dashboard() {
   const [connectError, setConnectError] = useState<string | null>(null)
   const [demoMode, setDemoMode] = useState(false)
 
-  const heroRef = useRef<HTMLDivElement>(null)
-  const [heroVisible, setHeroVisible] = useState(false)
-  const connectRef = useRef<HTMLDivElement>(null)
-  const [connectVisible, setConnectVisible] = useState(false)
+  // Scroll-reveal handles for each section
+  const heroR = useReveal()
+  const connectR = useReveal()
+  const rateR = useReveal()
+  const statsR = useReveal()
+  const historyR = useReveal()
+  const agentLogR = useReveal()
+  const accountR = useReveal()
 
   // Rate state
   const RATE_PRESETS = [0.0001, 0.001, 0.005, 0.01]
   const [selectedRate, setSelectedRate] = useState(0.001)
-  const rateRef = useRef<HTMLDivElement>(null)
-  const [rateVisible, setRateVisible] = useState(false)
 
   // Daily spend cap
   const CAP_PRESETS = [0.5, 1, 5, 10]
   const [dailyCap, setDailyCap] = useState(1)
-
-  // Stats section reveal
-  const statsRef = useRef<HTMLDivElement>(null)
-  const [statsVisible, setStatsVisible] = useState(false)
-
-  // History section reveal
-  const historyRef = useRef<HTMLDivElement>(null)
-  const [historyVisible, setHistoryVisible] = useState(false)
-
-  // Agent Log section reveal
-  const agentLogRef = useRef<HTMLDivElement>(null)
-  const [agentLogVisible, setAgentLogVisible] = useState(false)
-
-  // Account section reveal
-  const accountRef = useRef<HTMLDivElement>(null)
-  const [accountVisible, setAccountVisible] = useState(false)
-
-  useEffect(() => {
-    const el = heroRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setHeroVisible(true); observer.disconnect() }
-      },
-      { threshold: 0.15 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const el = connectRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setConnectVisible(true); observer.disconnect() }
-      },
-      { threshold: 0.15 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const el = rateRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setRateVisible(true); observer.disconnect() }
-      },
-      { threshold: 0.15 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const el = statsRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setStatsVisible(true); observer.disconnect() }
-      },
-      { threshold: 0.15 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const el = historyRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setHistoryVisible(true); observer.disconnect() }
-      },
-      { threshold: 0.15 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const el = agentLogRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setAgentLogVisible(true); observer.disconnect() }
-      },
-      { threshold: 0.15 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const el = accountRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setAccountVisible(true); observer.disconnect() }
-      },
-      { threshold: 0.15 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
 
   // Load existing connection and rate on mount
   useEffect(() => {
@@ -293,7 +189,7 @@ export default function Dashboard() {
     setDemoMode(true)
     setConnected(true)
     setConnectedUrl("Demo mode")
-    rateRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    rateR.ref.current?.scrollIntoView({ behavior: "smooth", block: "start" })
     await executeRun(true)
   }
 
@@ -329,54 +225,12 @@ export default function Dashboard() {
     }
   }
 
-  const heroReveal: React.CSSProperties = {
-    opacity: heroVisible ? 1 : 0,
-    transform: heroVisible ? "translateY(0)" : "translateY(40px)",
-    transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-  }
-
-  const connectReveal: React.CSSProperties = {
-    opacity: connectVisible ? 1 : 0,
-    transform: connectVisible ? "translateY(0)" : "translateY(40px)",
-    transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-  }
-
-  const rateReveal: React.CSSProperties = {
-    opacity: rateVisible ? 1 : 0,
-    transform: rateVisible ? "translateY(0)" : "translateY(40px)",
-    transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-  }
-
-  const statsReveal: React.CSSProperties = {
-    opacity: statsVisible ? 1 : 0,
-    transform: statsVisible ? "translateY(0)" : "translateY(40px)",
-    transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-  }
-
-  const historyReveal: React.CSSProperties = {
-    opacity: historyVisible ? 1 : 0,
-    transform: historyVisible ? "translateY(0)" : "translateY(40px)",
-    transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-  }
-
-  const agentLogReveal: React.CSSProperties = {
-    opacity: agentLogVisible ? 1 : 0,
-    transform: agentLogVisible ? "translateY(0)" : "translateY(40px)",
-    transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-  }
-
-  const accountReveal: React.CSSProperties = {
-    opacity: accountVisible ? 1 : 0,
-    transform: accountVisible ? "translateY(0)" : "translateY(40px)",
-    transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-  }
-
   return (
     <div className="mobile-page">
 
       {/* ── Hero strip ── */}
       <section style={{ background: "#0F0F0F", paddingTop: "160px", paddingBottom: "60px", paddingLeft: "120px", paddingRight: "120px" }}>
-        <div ref={heroRef} style={heroReveal}>
+        <div ref={heroR.ref} style={heroR.style}>
           <a
             href="/"
             style={{
@@ -436,7 +290,7 @@ export default function Dashboard() {
 
       {/* ── Connection ── */}
       <section style={{ background: "#E1DDD6", padding: "100px 120px" }}>
-        <div ref={connectRef} style={connectReveal}>
+        <div ref={connectR.ref} style={connectR.style}>
 
           {/* Label row */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -686,7 +540,7 @@ export default function Dashboard() {
 
       {/* ── Rate ── */}
       <section style={{ background: "#0F0F0F", padding: "100px 120px" }}>
-        <div ref={rateRef} style={rateReveal}>
+        <div ref={rateR.ref} style={rateR.style}>
 
           {/* Label row */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -993,7 +847,7 @@ export default function Dashboard() {
 
       {/* ── Stats ── */}
       <section style={{ background: "#E1DDD6", padding: "100px 120px" }}>
-        <div ref={statsRef} style={statsReveal}>
+        <div ref={statsR.ref} style={statsR.style}>
 
           {/* Label row */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -1052,7 +906,7 @@ export default function Dashboard() {
 
       {/* ── History ── */}
       <section style={{ background: "#0F0F0F", padding: "100px 120px" }}>
-        <div ref={historyRef} style={historyReveal}>
+        <div ref={historyR.ref} style={historyR.style}>
 
           {/* Label row */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -1187,7 +1041,7 @@ export default function Dashboard() {
 
       {/* ── Agent Log ── */}
       <section style={{ background: "#0F0F0F", padding: "100px 120px" }}>
-        <div ref={agentLogRef} style={agentLogReveal}>
+        <div ref={agentLogR.ref} style={agentLogR.style}>
 
           {/* Label row */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -1358,7 +1212,7 @@ export default function Dashboard() {
 
       {/* ── Account ── */}
       <section style={{ background: "#0F0F0F", paddingTop: "100px", paddingBottom: "160px", paddingLeft: "120px", paddingRight: "120px" }}>
-        <div ref={accountRef} style={accountReveal}>
+        <div ref={accountR.ref} style={accountR.style}>
 
           {/* Label row */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
