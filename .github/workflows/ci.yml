@@ -23,7 +23,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+
+      # The npm bundled with Node 20 can crash with "Exit handler never called"
+      # during install. Pin a known-good newer npm.
+      - name: Update npm
+        run: npm install -g npm@11
 
       - name: Install dependencies
         run: npm ci
