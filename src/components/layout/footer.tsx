@@ -68,6 +68,12 @@ export function Footer() {
         <Link href="/dashboard" style={LINK_STYLE}>
           Dashboard
         </Link>
+        <Link href="/privacy" style={LINK_STYLE}>
+          Privacy
+        </Link>
+        <Link href="/terms" style={LINK_STYLE}>
+          Terms
+        </Link>
         <span
           style={{
             fontFamily: MONO,
