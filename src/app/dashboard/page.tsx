@@ -288,6 +288,53 @@ export default function Dashboard() {
         </div>
       </section>
 
+      {/* ── Choose your path ── */}
+      <section style={{ background: "#0F0F0F", padding: "0 120px 80px" }}>
+        <div
+          className="paths-row"
+          style={{ display: "flex", gap: "1px", background: "rgba(225,221,214,0.12)", border: "1px solid rgba(225,221,214,0.12)" }}
+        >
+          {/* Listener path */}
+          <div className="path-card" style={{ flex: 1, background: "#0F0F0F", padding: "32px 36px" }}>
+            <span style={{ fontFamily: "var(--font-ibm-plex-mono), monospace", fontSize: "11px", color: "#6B665E", textTransform: "uppercase", letterSpacing: "-0.22px" }}>
+              For listeners
+            </span>
+            <h3 style={{ fontFamily: "var(--font-alpina)", fontWeight: 400, fontSize: "24px", color: "#E1DDD6", lineHeight: "28px", margin: "12px 0 0" }}>
+              Just press play
+            </h3>
+            <p style={{ fontFamily: "var(--font-ibm-plex-mono), monospace", fontSize: "13px", color: "#6B665E", lineHeight: "19px", margin: "12px 0 0", maxWidth: "340px" }}>
+              No server, no setup, no wallet. Play a track and the artist is paid in USDC, instantly. This is the easy way in.
+            </p>
+            <a
+              href="/listen"
+              style={{ fontFamily: "var(--font-ibm-plex-mono), monospace", fontSize: "12px", color: "#10B981", textTransform: "uppercase", textDecoration: "none", borderBottom: "1px solid rgba(16,185,129,0.4)", display: "inline-block", marginTop: "20px" }}
+            >
+              Open the player →
+            </a>
+          </div>
+
+          {/* Self-hoster path */}
+          <div className="path-card" style={{ flex: 1, background: "#0F0F0F", padding: "32px 36px" }}>
+            <span style={{ fontFamily: "var(--font-ibm-plex-mono), monospace", fontSize: "11px", color: "#6B665E", textTransform: "uppercase", letterSpacing: "-0.22px" }}>
+              For self-hosters
+            </span>
+            <h3 style={{ fontFamily: "var(--font-alpina)", fontWeight: 400, fontSize: "24px", color: "#E1DDD6", lineHeight: "28px", margin: "12px 0 0" }}>
+              Connect your library
+            </h3>
+            <p style={{ fontFamily: "var(--font-ibm-plex-mono), monospace", fontSize: "13px", color: "#6B665E", lineHeight: "19px", margin: "12px 0 0", maxWidth: "340px" }}>
+              Run Navidrome or any Subsonic server? Connect it below and the agent pays artists automatically as you listen.
+            </p>
+            <button
+              type="button"
+              onClick={() => connectR.ref.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              style={{ fontFamily: "var(--font-ibm-plex-mono), monospace", fontSize: "12px", color: "#6B665E", textTransform: "uppercase", background: "none", border: "none", padding: 0, cursor: "pointer", marginTop: "20px" }}
+            >
+              Set it up below ↓
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* ── Connection ── */}
       <section style={{ background: "#E1DDD6", padding: "100px 120px" }}>
         <div ref={connectR.ref} style={connectR.style}>

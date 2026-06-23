@@ -193,4 +193,7 @@ body {
   /* Docs: stack and drop the sidebar */
   .docs-layout { flex-direction: column !important; padding: 96px 20px 80px !important; gap: 24px !important; }
   .docs-sidebar { position: static !important; width: 100% !important; }
+
+  /* Onboarding paths: stack the two panels */
+  .paths-row { flex-direction: column !important; }
 }
