@@ -141,6 +141,8 @@ export function Nav() {
             className="nav-hamburger"
             onClick={() => setOpen(true)}
             aria-label="Open menu"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
             style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
           >
             <div
@@ -164,6 +166,10 @@ export function Nav() {
       {/* Mobile full-screen overlay */}
       {open && (
         <div
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site menu"
           style={{
             position: "fixed",
             inset: 0,
