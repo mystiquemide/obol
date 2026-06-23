@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
+import DocsSidebar from "./sidebar"
 
 export const metadata: Metadata = {
-  title: "Documentation - Obol",
+  title: "Documentation",
   description: "How Obol works: pay-per-play (x402), the payment agent, artist onboarding, setup, and API reference.",
 }
 
@@ -11,17 +12,6 @@ const INK = "#0F0F0F"
 const BODY = "#33302A"
 const MUTED = "#6B665E"
 const GREEN = "#10B981"
-
-const NAV = [
-  { id: "overview", label: "Overview" },
-  { id: "how-it-works", label: "How it works" },
-  { id: "pay-per-play", label: "Pay-per-play (x402)" },
-  { id: "the-agent", label: "The agent" },
-  { id: "for-artists", label: "For artists" },
-  { id: "quick-start", label: "Quick start" },
-  { id: "api", label: "API reference" },
-  { id: "faq", label: "FAQ" },
-]
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
@@ -53,16 +43,7 @@ export default function Docs() {
     <div className="mobile-page" style={{ background: "#F5F2EC", minHeight: "100vh" }}>
       <div className="docs-layout" style={{ display: "flex", gap: "48px", padding: "140px 80px 120px", alignItems: "flex-start" }}>
         {/* Sidebar */}
-        <aside className="docs-sidebar" style={{ position: "sticky", top: "96px", width: "220px", flexShrink: 0 }}>
-          <span style={{ fontFamily: MONO, fontSize: "11px", color: MUTED, textTransform: "uppercase", letterSpacing: "1px" }}>Documentation</span>
-          <nav style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "20px" }}>
-            {NAV.map((n) => (
-              <a key={n.id} href={`#${n.id}`} style={{ fontFamily: MONO, fontSize: "13px", color: BODY, textDecoration: "none" }}>
-                {n.label}
-              </a>
-            ))}
-          </nav>
-        </aside>
+        <DocsSidebar />
 
         {/* Content */}
         <main style={{ flex: 1, minWidth: 0 }}>

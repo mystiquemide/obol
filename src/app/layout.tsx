@@ -5,7 +5,10 @@ import { Footer } from "@/components/layout/footer"
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
-  title: "Obol - Your music collection pays its creators",
+  title: {
+    default: "Obol — Your music collection pays its creators",
+    template: "%s — Obol",
+  },
   description: "Per-listen royalty payments for music. Reads your listening, pays artists in USDC on-chain. No subscriptions.",
   openGraph: {
     title: "Obol - Every listen pays the artist",
