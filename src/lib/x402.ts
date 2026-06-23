@@ -4,7 +4,7 @@
 // X-PAYMENT-RESPONSE), but settled on Arc through Circle and verified by the
 // on-chain tx hash, rather than the EIP-3009 facilitator scheme. We label our
 // scheme "arc-onchain" so it is never mistaken for the "exact" EVM scheme.
-import { getTransactionDetails } from "@/lib/agent/circle"
+import { getTransactionDetails, SETTLED_STATES } from "@/lib/agent/circle"
 import { db } from "@/lib/db"
 
 export const X402_VERSION = 1
@@ -135,7 +135,9 @@ export async function verifyPayment(track: Track, header: string): Promise<Verif
 
   const tx = await getTransactionDetails(circleTxId ?? txHash!)
   if (!tx) return { ok: false, reason: "transaction not found" }
-  if (tx.state !== "COMPLETE") return { ok: false, reason: `transaction not complete (${tx.state})` }
+  if (!tx.state || !SETTLED_STATES.includes(tx.state)) {
+    return { ok: false, reason: `transaction not settled (${tx.state})` }
+  }
   if (tx.destinationAddress?.toLowerCase() !== track.payTo.toLowerCase()) {
     return { ok: false, reason: "recipient mismatch" }
   }

@@ -82,6 +82,13 @@ export interface TxDetails {
   blockchain: string | null
 }
 
+// Circle transaction states that mean the transfer has settled on-chain: the
+// funds moved and the tx is confirmed. COMPLETE is Circle's final state;
+// CONFIRMED means it's confirmed on-chain (hash and amount are fixed) while
+// Circle finishes its own accounting. Either is enough proof for x402.
+export const SETTLED_STATES = ["COMPLETE", "CONFIRMED"]
+const FAILED_STATES = ["FAILED", "CANCELLED", "DENIED"]
+
 // Fetch the full details of a Circle transaction (for x402 on-chain verification).
 // Accepts either a Circle transaction UUID or, by scanning, resolves what it can.
 export async function getTransactionDetails(txId: string): Promise<TxDetails | null> {
@@ -124,4 +131,39 @@ export async function getTransactionHash(
     if (i < retries - 1) await new Promise((r) => setTimeout(r, delayMs))
   }
   return { txHash: null, state: null }
+}
+
+// Wait for a Circle transaction to actually settle before treating the payment
+// as good. Circle exposes a txHash the moment the tx is broadcast (state SENT),
+// well before it confirms, so verification that runs at the first hash always
+// loses the race and rejects with "not settled (SENT)". Poll until the tx
+// reaches a settled state, hits a terminal failure, or we run out of attempts.
+export async function waitForSettlement(
+  txId: string,
+  retries = 12,
+  delayMs = 1500
+): Promise<TxDetails | null> {
+  const client = getClient()
+  let last: TxDetails | null = null
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await client.getTransaction({ id: txId })
+      const t = (res.data?.transaction ?? res.data) as Record<string, unknown> | undefined
+      if (t) {
+        last = {
+          state: (t.state as string) ?? null,
+          txHash: (t.txHash as string) ?? null,
+          destinationAddress: (t.destinationAddress as string) ?? null,
+          amounts: (t.amounts as string[]) ?? null,
+          blockchain: (t.blockchain as string) ?? null,
+        }
+        if (last.state && SETTLED_STATES.includes(last.state)) return last
+        if (last.state && FAILED_STATES.includes(last.state)) return last
+      }
+    } catch {
+      // transient — retry
+    }
+    if (i < retries - 1) await new Promise((r) => setTimeout(r, delayMs))
+  }
+  return last
 }

@@ -6,7 +6,7 @@
 // logic in-process (no self-fetch), so it works behind tunnels and on serverless.
 import { db, dbRetry } from "@/lib/db"
 import { getTrack, buildRequirements, verifyPayment, encodePayment } from "@/lib/x402"
-import { transferUsdc, getTransactionHash } from "@/lib/agent/circle"
+import { transferUsdc, waitForSettlement, SETTLED_STATES } from "@/lib/agent/circle"
 import { txUrl } from "@/lib/explorer"
 import { rateLimit, clientIp } from "@/lib/ratelimit"
 
@@ -85,8 +85,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
           amountUsdc: track.priceUsdc,
         })
         send({ type: "step", label: "settle", detail: "confirming on-chain" })
-        const { txHash } = await getTransactionHash(circleTxId)
-        if (!txHash) {
+        const settled = await waitForSettlement(circleTxId)
+        const txHash = settled?.txHash
+        if (!txHash || !settled?.state || !SETTLED_STATES.includes(settled.state)) {
           send({ type: "error", error: "That payment is taking longer than usual. Give it another try." })
           controller.close()
           return
