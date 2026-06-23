@@ -71,6 +71,10 @@
   50% { opacity: 0.8; }
 }
 .skeleton-pulse { animation: skeleton-pulse 1.5s ease-in-out infinite; }
+.skeleton {
+  background: rgba(225, 221, 214, 0.08);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
 
 /* Agent log line fade-in */
 @keyframes logFadeIn {

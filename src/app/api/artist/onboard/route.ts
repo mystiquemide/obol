@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Name and wallet address are required" }, { status: 400 })
   }
   if (!/^0x[a-fA-F0-9]{40}$/.test(walletAddress)) {
-    return NextResponse.json({ ok: false, error: "Invalid wallet address" }, { status: 400 })
+    return NextResponse.json({ ok: false, error: "That doesn't look like a wallet address. It should start with 0x and be 42 characters." }, { status: 400 })
   }
   const trackList: { title: string; priceUsdc?: number }[] = Array.isArray(tracks) ? tracks : []
   const valid = trackList.filter((t) => t?.title?.trim())

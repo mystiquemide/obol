@@ -79,7 +79,7 @@ export default function Listen() {
     try {
       const res = await fetch(`/api/x402/play/${track.id}`, { method: "POST" })
       if (!res.body) {
-        setState((s) => ({ ...s, error: "no stream" }))
+        setState((s) => ({ ...s, error: "That play didn't go through. Give it another try." }))
         return
       }
       const reader = res.body.getReader()
@@ -103,8 +103,8 @@ export default function Listen() {
           applyEvent(msg)
         }
       }
-    } catch (e) {
-      setState((s) => ({ ...s, error: String(e) }))
+    } catch {
+      setState((s) => ({ ...s, error: "We lost the connection mid-payment. Give it another try." }))
     } finally {
       setActive(null)
     }
@@ -165,7 +165,18 @@ export default function Listen() {
 
       <section style={{ padding: "20px 120px 160px" }}>
         {catalogStatus === "loading" && (
-          <p style={{ fontFamily: MONO, fontSize: "13px", color: "#6B665E" }}>Loading catalog…</p>
+          <div aria-busy="true" aria-label="Loading catalog" style={{ display: "flex", flexDirection: "column", gap: "1px", background: "rgba(225,221,214,0.08)" }}>
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: "32px", background: "#0F0F0F", padding: "24px 0" }}>
+                <div className="skeleton" style={{ width: "92px", height: "38px" }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="skeleton" style={{ width: "40%", height: "22px" }} />
+                  <div className="skeleton" style={{ width: "24%", height: "12px", marginTop: "8px" }} />
+                </div>
+                <div className="skeleton" style={{ width: "56px", height: "14px" }} />
+              </div>
+            ))}
+          </div>
         )}
         {catalogStatus === "error" && (
           <div>
@@ -182,9 +193,17 @@ export default function Listen() {
           </div>
         )}
         {catalogStatus === "ready" && tracks.length === 0 && (
-          <p style={{ fontFamily: MONO, fontSize: "13px", color: "#6B665E" }}>
-            No tracks yet. Artists can list their music on the For Artists page.
-          </p>
+          <div>
+            <p style={{ fontFamily: MONO, fontSize: "13px", color: "#6B665E", margin: 0 }}>
+              No tracks here yet. The catalog fills up as artists list their music.
+            </p>
+            <a
+              href="/artists"
+              style={{ fontFamily: MONO, fontSize: "12px", color: "#10B981", textDecoration: "none", display: "inline-block", marginTop: "10px", textTransform: "uppercase", borderBottom: "1px solid rgba(16,185,129,0.4)" }}
+            >
+              List your music →
+            </a>
+          </div>
         )}
         {catalogStatus === "ready" &&
           Array.from(new Set(tracks.map((t) => t.artist))).map((artistName) => (
@@ -285,7 +304,7 @@ export default function Listen() {
             )}
 
             {state.error && (
-              <p style={{ fontFamily: MONO, fontSize: "12px", color: "#6B665E", marginTop: "16px" }}>Error: {state.error}</p>
+              <p style={{ fontFamily: MONO, fontSize: "12px", color: "#6B665E", marginTop: "16px" }}>! {state.error}</p>
             )}
           </div>
         )}

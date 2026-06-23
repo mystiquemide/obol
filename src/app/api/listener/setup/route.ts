@@ -18,13 +18,13 @@ export async function POST(req: Request) {
     const data = await res.json()
     if (data["subsonic-response"]?.status !== "ok") {
       return NextResponse.json(
-        { ok: false, error: "Could not connect to Navidrome" },
+        { ok: false, error: "Those login details didn't work. Double-check your username and password, then try again." },
         { status: 400 }
       )
     }
   } catch {
     return NextResponse.json(
-      { ok: false, error: "Navidrome server unreachable" },
+      { ok: false, error: "We couldn't reach that server. Check the URL is correct and reachable, then try again." },
       { status: 400 }
     )
   }

@@ -10,7 +10,7 @@ export async function POST(req: Request) {
 
   // Basic USDC address validation (EVM hex address)
   if (!/^0x[a-fA-F0-9]{40}$/.test(walletAddress)) {
-    return NextResponse.json({ ok: false, error: "Invalid USDC wallet address" }, { status: 400 })
+    return NextResponse.json({ ok: false, error: "That doesn't look like a wallet address. It should start with 0x and be 42 characters." }, { status: 400 })
   }
 
   // Guard: once an artist is claimed to a wallet, don't let anyone redirect it elsewhere.

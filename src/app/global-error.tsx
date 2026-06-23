@@ -5,7 +5,7 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
     <html lang="en">
       <body style={{ background: "#0F0F0F", margin: 0 }}>
         <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", fontFamily: "monospace" }}>
-          <p style={{ fontSize: "14px", color: "#E1DDD6" }}>Something went wrong.</p>
+          <p style={{ fontSize: "14px", color: "#E1DDD6" }}>We&apos;re having trouble loading this.</p>
           <button
             type="button"
             onClick={reset}

@@ -11,9 +11,9 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 
   return (
     <div style={{ background: "#0F0F0F", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px" }}>
-      <p style={{ fontFamily: MONO, fontSize: "11px", color: "#6B665E", textTransform: "uppercase", letterSpacing: "1px" }}>Something went wrong</p>
+      <p style={{ fontFamily: MONO, fontSize: "11px", color: "#6B665E", textTransform: "uppercase", letterSpacing: "1px" }}>We&apos;re having trouble</p>
       <p style={{ fontFamily: MONO, fontSize: "14px", color: "#E1DDD6", marginTop: "12px", maxWidth: "420px", textAlign: "center", lineHeight: "20px" }}>
-        An unexpected error occurred. You can try again, or head back home.
+        This page hit a snag on our end. Give it another try, or head back home.
       </p>
       <div style={{ display: "flex", gap: "24px", marginTop: "28px" }}>
         <button

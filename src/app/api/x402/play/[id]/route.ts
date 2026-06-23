@@ -17,7 +17,7 @@ const X402_DAILY_CAP_USDC = 1.0
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const rl = rateLimit(`play:${clientIp(req)}`, 5, 30_000)
   if (!rl.ok) {
-    return new Response(JSON.stringify({ error: "Too many requests" }), {
+    return new Response(JSON.stringify({ error: "You're going a bit fast. Give it a few seconds and try again." }), {
       status: 429,
       headers: { "Content-Type": "application/json", "Retry-After": String(rl.retryAfter) },
     })
@@ -34,7 +34,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
       try {
         if (!track) {
-          send({ type: "error", error: "unknown track" })
+          send({ type: "error", error: "We can't find that track. It may have been removed." })
           controller.close()
           return
         }
@@ -61,7 +61,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         )
         const spentToday = spent._sum.amountUsdc ?? 0
         if (spentToday + track.priceUsdc > X402_DAILY_CAP_USDC) {
-          send({ type: "error", error: "Daily demo budget reached. Try again tomorrow." })
+          send({ type: "error", error: "That's the daily limit for now. Check back tomorrow." })
           controller.close()
           return
         }
@@ -74,7 +74,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
           })
         )
         if (!listener?.circleWalletId) {
-          send({ type: "error", error: "no funded listener wallet available" })
+          send({ type: "error", error: "Payments are paused right now. Please try again shortly." })
           controller.close()
           return
         }
@@ -87,7 +87,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         send({ type: "step", label: "settle", detail: "confirming on-chain" })
         const { txHash } = await getTransactionHash(circleTxId)
         if (!txHash) {
-          send({ type: "error", error: "payment did not confirm in time" })
+          send({ type: "error", error: "That payment is taking longer than usual. Give it another try." })
           controller.close()
           return
         }
@@ -102,7 +102,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         })
         const verify = await verifyPayment(track, xPayment)
         if (!verify.ok) {
-          send({ type: "error", error: `unlock failed: ${verify.reason ?? "invalid payment"}` })
+          send({ type: "error", error: "We couldn't verify that payment. Give it another try." })
           controller.close()
           return
         }
@@ -115,7 +115,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
             })
           )
         } catch {
-          send({ type: "error", error: "payment already redeemed" })
+          send({ type: "error", error: "That track is already unlocked." })
           controller.close()
           return
         }
@@ -157,8 +157,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
         send({ type: "unlocked", resource })
         send({ type: "done" })
-      } catch (e) {
-        send({ type: "error", error: e instanceof Error ? e.message : String(e) })
+      } catch {
+        send({ type: "error", error: "That payment didn't go through. Give it another try." })
       } finally {
         controller.close()
       }

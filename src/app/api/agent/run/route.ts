@@ -7,7 +7,7 @@ import { rateLimit, clientIp } from "@/lib/ratelimit"
 export async function POST(req: Request) {
   const rl = rateLimit(`run:${clientIp(req)}`, 6, 60_000)
   if (!rl.ok) {
-    return new Response(JSON.stringify({ ok: false, error: "Too many requests" }), {
+    return new Response(JSON.stringify({ ok: false, error: "You're going a bit fast. Give it a few seconds and try again." }), {
       status: 429,
       headers: { "Content-Type": "application/json", "Retry-After": String(rl.retryAfter) },
     })
@@ -43,9 +43,8 @@ export async function POST(req: Request) {
           onLog: (line) => send({ type: "log", line }),
         })
         send({ type: "done", result })
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Unknown error"
-        send({ type: "error", error: message })
+      } catch {
+        send({ type: "error", error: "The run stopped early on our end. Give it another try." })
       } finally {
         controller.close()
       }

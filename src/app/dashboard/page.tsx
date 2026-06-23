@@ -137,7 +137,7 @@ export default function Dashboard() {
         body: JSON.stringify({ demo }),
       })
       if (!res.body) {
-        setLog((prev) => [...prev, "Error: no response stream"])
+        setLog((prev) => [...prev, "We lost the connection to the agent. Try running it again."])
         return
       }
       const reader = res.body.getReader()
@@ -172,12 +172,12 @@ export default function Dashboard() {
             if (msg.result?.log) setLog(msg.result.log)
             await fetchStatus()
           } else if (msg.type === "error") {
-            setLog((prev) => [...prev, `Error: ${msg.error}`])
+            setLog((prev) => [...prev, msg.error ?? "The run stopped early. Try again."])
           }
         }
       }
-    } catch (e) {
-      setLog((prev) => [...prev, `Error: ${e}`])
+    } catch {
+      setLog((prev) => [...prev, "We lost the connection to the agent. Try running it again."])
     } finally {
       setRunning(false)
       setDone(true)
@@ -1132,7 +1132,7 @@ export default function Dashboard() {
                   lineHeight: "20px",
                 }}
               >
-                No agent runs yet.
+                Nothing here yet. Hit Run agent above and the live log shows up here.
               </span>
             ) : (
               log.map((line, i) => (
