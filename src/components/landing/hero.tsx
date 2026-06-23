@@ -80,10 +80,11 @@ export function Hero() {
           Obol reads your Navidrome scrobbles, resolves artists via MusicBrainz, and sends USDC nanopayments autonomously.
         </p>
 
-        {/* CTAs */}
+        {/* CTAs — lead with the pay-per-play demo (works for everyone, no setup);
+            the dashboard path is for self-hosters, so it's secondary. */}
         <div className="flex items-center hero-ctas" style={{ gap: "32px", marginTop: "40px" }}>
           <Link
-            href="/dashboard"
+            href="/listen"
             style={{
               fontFamily: "var(--font-ibm-plex-mono), monospace",
               fontWeight: 400,
@@ -97,10 +98,10 @@ export function Hero() {
               borderRadius: 0,
             }}
           >
-            Open dashboard
+            Play a track
           </Link>
           <Link
-            href="/how-it-works"
+            href="/dashboard"
             style={{
               fontFamily: "var(--font-ibm-plex-mono), monospace",
               fontWeight: 400,
@@ -114,7 +115,7 @@ export function Hero() {
               borderRadius: 0,
             }}
           >
-            See how it works
+            Connect your server
           </Link>
         </div>
 
