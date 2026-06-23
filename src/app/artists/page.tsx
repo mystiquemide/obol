@@ -754,9 +754,9 @@ export default function Artists() {
                   style={{
                     fontFamily: "var(--font-ibm-plex-mono), monospace",
                     fontWeight: 400,
-                    fontSize: "11px",
-                    color: "#6B665E",
-                    lineHeight: "15.4px",
+                    fontSize: "13px",
+                    color: "#33302A",
+                    lineHeight: "20px",
                     letterSpacing: "-0.22px",
                     maxWidth: "540px",
                     margin: "8px 0 0",

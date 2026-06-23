@@ -394,6 +394,8 @@ export default function Dashboard() {
               <input
                 className="dashboard-input"
                 type="text"
+                name="serverUrl"
+                autoComplete="url"
                 placeholder="Navidrome server URL"
                 aria-label="Navidrome server URL"
                 value={serverUrl}
@@ -416,6 +418,8 @@ export default function Dashboard() {
               <input
                 className="dashboard-input"
                 type="text"
+                name="username"
+                autoComplete="username"
                 placeholder="Username"
                 aria-label="Navidrome username"
                 value={username}
@@ -438,6 +442,8 @@ export default function Dashboard() {
               <input
                 className="dashboard-input"
                 type="password"
+                name="password"
+                autoComplete="current-password"
                 placeholder="Password"
                 aria-label="Navidrome password"
                 value={password}
