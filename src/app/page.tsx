@@ -9,7 +9,7 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal"
 
 export default function Home() {
   return (
-    <main>
+    <>
       <style>{`
         @media (max-width: 768px) {
           .hero-section { height: 100svh !important; }
@@ -66,6 +66,6 @@ export default function Home() {
       <ScrollReveal>
         <FinalCta />
       </ScrollReveal>
-    </main>
+    </>
   )
 }

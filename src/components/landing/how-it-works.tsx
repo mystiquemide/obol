@@ -151,9 +151,9 @@ function Step({
         style={{
           fontFamily: "var(--font-ibm-plex-mono), monospace",
           fontWeight: 400,
-          fontSize: "11px",
+          fontSize: "13px",
           color: "#000000",
-          lineHeight: "15.4px",
+          lineHeight: "19px",
           letterSpacing: "-0.22px",
           margin: 0,
           marginTop: "12px",

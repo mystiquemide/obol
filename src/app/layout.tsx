@@ -34,8 +34,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-full bg-[#0F0F0F] text-[#E1DDD6] flex flex-col">
-        <Nav />
-        <main className="flex-1">{children}</main>
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
+        <header>
+          <Nav />
+        </header>
+        <main id="main-content" className="flex-1">{children}</main>
         <Footer />
       </body>
     </html>

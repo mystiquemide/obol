@@ -58,6 +58,17 @@ export function Footer() {
         >
           Obol
         </span>
+        <span
+          style={{
+            fontFamily: MONO,
+            fontWeight: 400,
+            fontSize: "11px",
+            color: "rgba(225, 221, 214, 0.4)",
+            marginLeft: "8px",
+          }}
+        >
+          © {new Date().getFullYear()}
+        </span>
       </div>
 
       {/* Right: links + tagline */}

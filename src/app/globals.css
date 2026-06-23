@@ -92,6 +92,25 @@ input:focus-visible,
   outline-offset: 2px;
 }
 
+/* Skip-to-content link — hidden until focused by keyboard navigation */
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -48px;
+  z-index: 200;
+  background: #E1DDD6;
+  color: #0F0F0F;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px 16px;
+  transition: top 0.15s ease-out;
+}
+.skip-link:focus {
+  top: 16px;
+}
+
 /* Dashboard connection inputs — placeholder color on cream bg */
 .dashboard-input::placeholder { color: #6B665E; }
 

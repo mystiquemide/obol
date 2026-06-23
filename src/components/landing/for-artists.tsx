@@ -101,7 +101,10 @@ export function ForArtists() {
         <div className="flex items-center" style={{ gap: "24px" }}>
           <input
             type="text"
+            name="artistName"
+            autoComplete="off"
             placeholder="Search MusicBrainz name"
+            aria-label="Search your artist name on MusicBrainz"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") go() }}
@@ -182,9 +185,9 @@ function Feature({ icon, label }: { icon: React.ReactNode; label: string }) {
         style={{
           fontFamily: "var(--font-ibm-plex-mono), monospace",
           fontWeight: 400,
-          fontSize: "11px",
-          color: "#6B665E",
-          lineHeight: "15.4px",
+          fontSize: "13px",
+          color: "rgba(225, 221, 214, 0.7)",
+          lineHeight: "19px",
           margin: 0,
         }}
       >
