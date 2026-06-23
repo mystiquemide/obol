@@ -195,8 +195,18 @@ body {
   .artists-faq-content { max-width: 100% !important; }
 
   /* Docs: stack and drop the sidebar */
-  .docs-layout { flex-direction: column !important; padding: 96px 20px 80px !important; gap: 24px !important; }
+  .docs-layout { flex-direction: column !important; padding: 96px 20px 80px !important; gap: 24px !important; overflow-x: hidden; }
   .docs-sidebar { position: static !important; width: 100% !important; }
+  /* Keep content inside the viewport on narrow screens */
+  .docs-layout main { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+  .docs-layout main h1 { font-size: 30px !important; line-height: 36px !important; }
+  .docs-layout main h2 { font-size: 22px !important; line-height: 26px !important; }
+  .docs-layout p,
+  .docs-layout pre,
+  .docs-layout div { max-width: 100% !important; }
+  /* Long URLs / inline code wrap instead of pushing the layout wide */
+  .docs-layout p { overflow-wrap: anywhere; }
+  .docs-layout pre { white-space: pre-wrap; word-break: break-word; }
 
   /* Onboarding paths: stack the two panels */
   .paths-row { flex-direction: column !important; }
