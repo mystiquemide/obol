@@ -31,10 +31,7 @@ Obol pays artists per listen, in real time, on-chain. It works two ways:
 
 Every payment, both paths, produces a real on-chain transaction you can click and verify.
 
-> **Live demo:** _coming soon_ — deploy in progress.
->
-> <!-- Replace with a 30–60s screen recording of /listen: press play → 402 → settle on Arc → unlock → music, then click the tx hash. -->
-> _Demo recording to be added (`docs/assets/demo.gif`)._
+**[:arrow_forward: Live demo → deobol.vercel.app](https://deobol.vercel.app)**
 
 ## Features
 
@@ -47,13 +44,6 @@ Every payment, both paths, produces a real on-chain transaction you can click an
 - **Production-ready** — health check, error boundaries, CI, CodeQL, Docker, mobile-responsive, accessible
 
 ## Screens
-
-<!--
-Capture these from the running app and save into docs/assets/ :
-  1. listen.png    — /listen mid-handshake: 402 → settle → unlocked with the audio control
-  2. dashboard.png — /dashboard agent run with the streamed log + climbing stats
-  3. receipt.png   — /artist/[mbId] receipt showing the on-chain ledger of tx links
--->
 
 | Pay-per-play | Agent dashboard | On-chain receipt |
 |---|---|---|
