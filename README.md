@@ -31,7 +31,7 @@ Obol pays artists per listen, in real time, on-chain. It works two ways:
 
 Every payment, both paths, produces a real on-chain transaction you can click and verify.
 
-**[:arrow_forward: Live demo → deobol.vercel.app](https://deobol.vercel.app)**
+**[:arrow_forward: Live demo → deobol.xyz](https://deobol.xyz)**
 
 ## Features
 
